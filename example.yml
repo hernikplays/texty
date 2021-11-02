@@ -1,0 +1,17 @@
+meta: # make sure every key is in lowercase
+  name: "My Text Adventure" # Game name
+  creator: "hernik" # Your name as a creator
+
+game: # here goes all the game logic
+  start: # the starting point always HAS to be named "start" (lowercase), the order and name of the rest does not matter
+      text: "You arrive to a small tavern in the middle of nowhere.\nYou are greeted with a non-welcoming look on the faces of all the customers." # here is the text, which gets printed
+      actions: # here you add a list of actions that are inside of `game`, the user can select them
+        - wave
+        - sit
+  wave:
+      description: "Wave" # this appears in the selection box, if no description is supplied
+      text: "You wave at the customers to signal your arrival. They all ignore you and look away."
+  sit: # if no `actions` are supplied, the game exits
+      description: "Sit down"
+      text: "You quietly sit down and check the menu."
+
