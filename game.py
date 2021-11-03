@@ -1,5 +1,6 @@
 import yaml
 from yaml.loader import SafeLoader
+from colorama import Fore, Back, Style
 
 class Game:
     def __init__(self,name:str,author:str,game:dict):
@@ -35,6 +36,12 @@ class Game:
             sel = input("Make a selection (number): ")
             isWrong = self.make_selection(sel)
         self.printme()
+
+    def parse_colors(self,text:str) -> str:
+        '''
+        Used to convert color codes in string to colors from the colorama lib
+        '''
+        return text.replace("&b",Fore.CYAN)
 
 
 def load(file_path):
