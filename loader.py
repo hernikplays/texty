@@ -11,10 +11,12 @@ class Game:
             self.nodes.update({k:game[k]})
 
     def make_selection(self,selection):
-        if(selection >= len(self.nodes[self.current][selection]) or selection < 0):
+        if(selection is not int or selection >= len(self.nodes[self.current][selection]) or selection < 0):
             print("Invalid selection")
+            return False
         else:
             self.current = self.nodes[self.current][selection]
+            return True
 
     
     def printme(self):
@@ -28,6 +30,12 @@ class Game:
             ostring+=f"{i} - {self.nodes[option]['description']}\n"
         print(ostring)
         sel = input("Make a selection (number): ")
+        isWrong = self.make_selection(sel)
+        while isWrong == False:
+            sel = input("Make a selection (number): ")
+            isWrong = self.make_selection(sel)
+        self.printme()
+
 
 def load(file_path):
     '''Loads the game from a YAML file to a Game class'''
