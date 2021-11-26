@@ -9,8 +9,9 @@ def main():
         exit(1)
     else:
         game = load(argv[1])
+        if(game is None):
+            exit(1)
         game.printme()
 
 if __name__ == "__main__":
     main()
-
