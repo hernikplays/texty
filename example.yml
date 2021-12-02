@@ -10,7 +10,7 @@ game: # here goes all the game logic
         - sit
   wave:
       description: "Wave" # this appears in the selection box, if no description is supplied
-      text: "You wave at the customers to signal your arrival. They all ignore you and look away."
+      text: "&bYou wave at the customers to signal your arrival. &rThey all ignore you and look away."
   sit: # if no `actions` are supplied, the game exits
       description: "Sit down"
       text: "You quietly sit down and check the menu."

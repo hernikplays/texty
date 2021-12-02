@@ -42,7 +42,7 @@ class Game:
         '''
         Used to convert color codes in string to colors from the colorama lib
         '''
-        newText = text.replace("&b",Fore.CYAN).replace("\n",Fore.RESET + "\n") # replace color codes and newlines with colorama
+        newText = text.replace("&b",Fore.CYAN).replace("&c",Fore.RED).replace("&e", Fore.YELLOW).replace("&a",Fore.GREEN).replace("&9",Fore.BLUE).replace("&r",Fore.RESET).replace("&f",Fore.WHITE).replace("&5",Fore.MAGENTA).replace("\n",Fore.RESET + "\n") # replace color codes and newlines with colorama
         newText += Fore.RESET # reset color at the end of the text
         return newText
 
