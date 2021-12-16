@@ -24,7 +24,7 @@ class Game:
         '''
         Used to print out the current prompt with the options
         '''
-        print(self.nodes[self.current]["text"])
+        print(self.parse_colors(self.nodes[self.current]["text"]))
         print("")
         ostring = ""
         if("actions" in self.nodes[self.current].keys()):
@@ -55,6 +55,6 @@ def load(file_path):
             g = Game(data)
             return g
     except Exception as e:
-        print("An exception has occured while loading the game from the YAML file:")
+        print(f"{Back.RED}{Fore.WHITE}An exception has occured while loading the game from the YAML file:{Fore.RESET}{Back.RESET}")
         print(e)
         return None
