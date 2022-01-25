@@ -30,7 +30,7 @@ class Game:
         if(animated != None):
             self.print_animated(animated.group(0))
             self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace(animated.group(0),"") # remove the animated text from the text prompt
-        print(self.nodes[self.current]["text"])
+        print(self.parse_colors(self.nodes[self.current]["text"]))
         print("")
         ostring = ""
         if("actions" in self.nodes[self.current].keys()):
@@ -60,7 +60,7 @@ class Game:
         '''
         Used to convert color codes in string to colors from the colorama lib
         '''
-        newText = text.replace("&b",Fore.CYAN).replace("\n",Fore.RESET + "\n") # replace color codes and newlines with colorama
+        newText = text.replace("&b",Fore.CYAN).replace("&c",Fore.RED).replace("&e", Fore.YELLOW).replace("&a",Fore.GREEN).replace("&9",Fore.BLUE).replace("&r",Fore.RESET).replace("&f",Fore.WHITE).replace("&5",Fore.MAGENTA).replace("\n",Fore.RESET + "\n") # replace color codes and newlines with colorama
         newText += Fore.RESET # reset color at the end of the text
         return newText
 
@@ -73,6 +73,6 @@ def load(file_path):
             g = Game(data)
             return g
     except Exception as e:
-        print("An exception has occured while loading the game from the YAML file:")
+        print(f"{Back.RED}{Fore.WHITE}An exception has occured while loading the game from the YAML file:{Fore.RESET}{Back.RESET}")
         print(e)
         return None
