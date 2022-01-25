@@ -1,6 +1,9 @@
 import yaml
 from yaml.loader import SafeLoader
 from colorama import Fore, Back, Style
+import re
+from .ascii import ascii_art
+from time import sleep
 
 class Game:
     def __init__(self,data:dict):
@@ -18,12 +21,15 @@ class Game:
         else:
             self.current = self.nodes[self.current]["actions"][selection]
             return True
-
     
-    def printme(self):
+    def print_text(self):
         '''
         Used to print out the current prompt with the options
         '''
+        animated = re.search(r"(?!{).+(?=})",self.nodes[self.current]["text"]) # find the animated text
+        if(animated != None):
+            self.print_animated(animated.group(0))
+            self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace(animated.group(0),"") # remove the animated text from the text prompt
         print(self.nodes[self.current]["text"])
         print("")
         ostring = ""
@@ -36,7 +42,19 @@ class Game:
             while isWrong == False:
                 sel = input("Make a selection (number): ")
                 isWrong = self.make_selection(sel)
-            self.printme()
+            self.print_text()
+
+    def print_animated(self,animid):
+        '''
+        Used to print out animated text,
+        currently only prints out the first occurence of an animated text
+        (in curly braces)
+        '''
+        animation = ascii_art(animid)
+        for frame in animation:
+            print(frame)
+            sleep(0.2)
+        
 
     def parse_colors(self,text:str) -> str:
         '''

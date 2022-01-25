@@ -1,5 +1,5 @@
 from sys import argv
-from game import *
+from lib.game import *
 from colorama import init
 
 def main():
@@ -11,7 +11,7 @@ def main():
         game = load(argv[1])
         if(game is None):
             exit(1)
-        game.printme()
+        game.print_text()
 
 if __name__ == "__main__":
     main()
