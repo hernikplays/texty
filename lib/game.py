@@ -4,6 +4,7 @@ from colorama import Fore, Back, Style
 import re
 from .ascii import ascii_art
 from time import sleep
+from os import system
 
 class Game:
     def __init__(self,data:dict):
@@ -29,7 +30,7 @@ class Game:
         animated = re.search(r"(?!{).+(?=})",self.nodes[self.current]["text"]) # find the animated text
         if(animated != None):
             self.print_animated(animated.group(0))
-            self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace(animated.group(0),"") # remove the animated text from the text prompt
+            self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace("{"+animated.group(0)+"}","") # remove the animated text from the text prompt
         print(self.parse_colors(self.nodes[self.current]["text"]))
         print("")
         ostring = ""
@@ -52,8 +53,10 @@ class Game:
         '''
         animation = ascii_art(animid)
         for frame in animation:
+            system("cls||clear")
             print(frame)
             sleep(0.2)
+        print()
         
 
     def parse_colors(self,text:str) -> str:
