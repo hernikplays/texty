@@ -12,16 +12,24 @@ class Game:
         self.author = data["meta"]["creator"]
         self.current = "start"
         self.nodes = {}
+        self.inventory = []
         for k in data["game"]:
             self.nodes.update({k:data["game"][k]})
 
-    def make_selection(self,selection:int) -> bool:
-        if(type(selection) != int or selection >= len(self.nodes[self.current]["actions"]) or selection < 0):
-            print("Invalid selection")
-            return False
-        else:
-            self.current = self.nodes[self.current]["actions"][selection]
-            return True
+    def make_selection(self) -> int:
+        y = False
+        selection = 0
+        # TODO: Check for "has_item"
+        while y == False:
+            try:
+                selection = int(input("Make a selection (number): "))
+            except ValueError:
+                print("Not a number selection")
+            if(selection >= len(self.nodes[self.current]["actions"]) or selection < 0):
+                print("Invalid selection")
+            else:
+                y = True
+        return selection
     
     def print_text(self):
         '''
@@ -38,11 +46,11 @@ class Game:
             for i,option in enumerate(self.nodes[self.current]["actions"]):
                 ostring+=f"{i} - {self.nodes[option]['description']}\n"
             print(ostring)
-            sel = input("Make a selection (number): ")
-            isWrong = self.make_selection(int(sel))
-            while isWrong == False:
-                sel = input("Make a selection (number): ")
-                isWrong = self.make_selection(sel)
+            sel = self.make_selection()
+            if(self.nodes[self.current]["add_inventory"] is not None):
+                # add item to inventory
+                self.inventory.append(self.nodes[self.current]["add_inventory"])
+            self.current = self.nodes[self.current]["actions"][sel]
             self.print_text()
 
     def print_animated(self,animid):

@@ -1,7 +1,7 @@
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 from os import listdir
-
+import yaml
 class AsciiAnimation:
     def __init__(self) -> None:
         self.frames = []
@@ -16,8 +16,11 @@ class AsciiAnimation:
             with ZipFile(f"./assets/{name}.asc","r") as z: # extract the asc file
                 z.extractall(f"{tmpdir}/ascii/{name}")
                 for f in listdir(f"{tmpdir}/ascii/{name}"): # read all the files
-                    if f.endswith("yaml"):
-                        # TODO: load asc config file
+                    if f == "config.yml":
+                        with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as c:
+                            data = yaml.load(c,Loader=yaml.SafeLoader)
+                            if(data["speed"] != None):
+                                self.speed = data["speed"]
                         pass
-                    with open(f"{tmpdir}/ascii/{name}/{f}") as f: # add all frames into list
+                    with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as f: # add all frames into list
                         self.frames.append(f.read())
