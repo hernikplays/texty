@@ -53,10 +53,10 @@ class Game:
         '''
         animation = AsciiAnimation()
         animation.load_ascii(animid)
-        for frame in animation:
+        for frame in animation.frames:
             system("cls||clear")
             print(frame)
-            sleep(0.2)
+            sleep(animation.speed)
         print()
         
 
