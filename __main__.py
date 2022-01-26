@@ -2,7 +2,7 @@ from sys import argv
 from lib.game import *
 from colorama import init
 
-def main():
+def main(): # TODO: Maybe a menu for available text games?
     init()
     if len(argv)<2:
         print("You need to specify a path to a YAML file")

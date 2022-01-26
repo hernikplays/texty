@@ -2,7 +2,7 @@ import yaml
 from yaml.loader import SafeLoader
 from colorama import Fore, Back, Style
 import re
-from .ascii import ascii_art
+from .ascii import AsciiAnimation
 from time import sleep
 from os import system
 
@@ -51,7 +51,8 @@ class Game:
         currently only prints out the first occurence of an animated text
         (in curly braces)
         '''
-        animation = ascii_art(animid)
+        animation = AsciiAnimation()
+        animation.load_ascii(animid)
         for frame in animation:
             system("cls||clear")
             print(frame)
