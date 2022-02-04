@@ -1,5 +1,6 @@
 meta: # make sure every key is in lowercase
   name: "My Text Adventure" # Game name
+  id: "examplegame" # An original game ID (please try to be original)
   creator: "hernik" # Your name as a creator
 
 game: # here goes all the game logic

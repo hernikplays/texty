@@ -11,7 +11,7 @@ def main(): # TODO: Maybe a menu for available text games?
         game = load(argv[1])
         if(game is None):
             exit(1)
-        game.print_text()
+        game.main_menu()
 
 if __name__ == "__main__":
     main()

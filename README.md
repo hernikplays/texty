@@ -1,5 +1,5 @@
 # texty
-An extremely simple text-adventure game engine(?)
+An extremely simple text-adventure game ~~engine(?)~~ player
 
 ## What is this?
 I was bored
