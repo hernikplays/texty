@@ -29,6 +29,15 @@ class Game: # the game class keeps information about the loaded game
             print("1 - Start")
             print("2 - Options")
             print("0 - Quit")
+            selection = self.make_selection(3)
+            system("cls||clear")
+            if(selection == 1): # start new game
+                self.print_text()
+            elif(selection == 2):
+                self.settings_menu()
+            elif(selection == 0):
+                print("Quitting")
+                exit()
         else: # Display continue
             print(self.name)
             print(f"A game by {self.author}")
@@ -45,7 +54,9 @@ class Game: # the game class keeps information about the loaded game
                 self.print_text()
             elif(selection == 2):
                 self.print_text()
-            else:
+            elif(selection == 3):
+                self.settings_menu()
+            elif(selection == 0):
                 print("Quitting")
                 exit()
 
@@ -70,27 +81,29 @@ class Game: # the game class keeps information about the loaded game
                 with open("./saves/lang","w") as f:
                     f.write("cz")
             self.settings_menu()
-        pass
+        else:
+            self.main_menu()
 
     def make_selection(self, length=0) -> int: # this method makes sure a valid selection is made and returns the selection as a number
         l = length # sets the length
         if(l == 0): # if no length was set, we get it from nodes
-            l = len(self.nodes[self.current]["actions"])
+            l = len(self.nodes[self.current]["actions"])-1
         y = False
         selection = 0
         # TODO: Check for "has_item"
-        while y == False:
+        while y == False: # while the selection is not correct
             try:
-                selection = int(input("Make a selection (number): "))
-            except ValueError:
+                selection = int(input("Make a selection (number): ")) # ask for selection
+            except ValueError: # handle wrong input type
                 print("Not a number selection")
-            if(selection >= len(self.nodes[self.current]["actions"]) or selection < 0):
+            if(selection > l or selection < 0): # if the number is bigger than the length or smaller than 0, print error
                 print("Invalid selection")
             else:
-                y = True
+                y = True # else return the selection
         return selection
     
     def print_text(self): # Prints out the current prompt
+        system("cls||clear")
         animated = re.search(r"(?!{).+(?=})",self.nodes[self.current]["text"]) # find the animated text
         if(animated != None):
             self.print_animated(animated.group(0))
@@ -103,11 +116,11 @@ class Game: # the game class keeps information about the loaded game
                 ostring+=f"{i} - {self.nodes[option]['description']}\n"
             print(ostring)
             sel = self.make_selection()
-            if(self.nodes[self.current]["add_inventory"] is not None):
+            if "add_item" in self.nodes[self.current]: # if there is an add_inventory key in the node,
                 # add item to inventory
                 self.inventory.append(self.nodes[self.current]["add_inventory"])
             self.current = self.nodes[self.current]["actions"][sel]
-            self.save.currentPrompt = self.nodes[self.current]["actions"][sel] # save the current prompt
+            self.save.currentPrompt = self.current # save the current prompt
             self.print_text()
 
     def print_animated(self,animid): # prinst the first found occurence of an ascii animation
