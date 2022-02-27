@@ -3,10 +3,10 @@ import yaml
 
 class SaveManager: # manages save and configuration files
     def __init__(self):
-        self.id = ""
-        self.currentPrompt = ""
-        self.lang = ""
-        self.inventory = []
+        self.id = "" # game ID
+        self.currentPrompt = "" # Current prompt
+        self.lang = "" # Selected language
+        self.inventory = [] # Items in inventory
 
     def load(self):
         if(path.exists(f"./saves/{self.id}.yml")):

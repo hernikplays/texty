@@ -61,7 +61,7 @@ class Game: # the game class keeps information about the loaded game
                 exit()
 
     def settings_menu(self): # displays the settings menu
-        print("Settings")
+        print("Options")
         print("")
         print("1 - Language")
         print("0 - Back")
@@ -85,6 +85,7 @@ class Game: # the game class keeps information about the loaded game
             self.main_menu()
 
     def make_selection(self, length=0) -> int: # this method makes sure a valid selection is made and returns the selection as a number
+        # TODO: replace with selection by keyboard(?)
         l = length # sets the length
         if(l == 0): # if no length was set, we get it from nodes
             l = len(self.nodes[self.current]["actions"])-1

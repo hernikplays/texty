@@ -1,1 +1,19 @@
-TODO: "todo"
+yaml_unspecified: 'You need to specify a path to a YAML file'
+game_by: 'A game by $author'
+start: 'Start'
+options: 'Options'
+quit: 'Quit'
+quitting: 'Quitting'
+continue: 'Continue'
+new_game: 'New game'
+
+lang: 'Language'
+back: 'Back'
+lang_en: 'English'
+lang_cz: 'Czech'
+
+selection: 'Make a selection (number):'
+not_number: 'Not a number selection'
+invalid: 'Invalid selection'
+
+error_loading: 'An exception has occured while loading the game from the YAML file:'

@@ -1,1 +1,19 @@
-TODO: "todo"
+yaml_unspecified: 'Musíte specifikovat YAML soubor'
+game_by: 'Vytvořil $author'
+start: 'Start'
+options: 'Nastavení'
+quit: 'Vypnout'
+quitting: 'Vypínám'
+continue: 'Pokračovat'
+new_game: 'Nová hra'
+
+lang: 'Jazyk'
+back: 'Zpět'
+lang_en: 'Angličtina'
+lang_cz: 'Čeština'
+
+selection: 'Vyberte zadáním čísla:'
+not_number: 'Nezadali jste číslo'
+invalid: 'Neplatný výběr'
+
+error_loading: 'Při načítání YAML souboru nastala chyba:'
