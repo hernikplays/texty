@@ -1,5 +1,6 @@
-# texty
-An extremely simple text-adventure game ~~engine(?)~~ player
+![spaghetti code](https://img.shields.io/badge/spaghetti%20code-certified-success) [![wakatime](https://wakatime.com/badge/user/17178fab-a33c-430f-a764-7b3f26c7b966/project/cd3b8d2e-460d-4a8f-952b-dc3c1b869158.svg)](https://wakatime.com/badge/user/17178fab-a33c-430f-a764-7b3f26c7b966/project/cd3b8d2e-460d-4a8f-952b-dc3c1b869158)
+# texty 
+An extremely simple text-adventure game ~~engine(?)~~ player 
 
 ## What is this?
 I was bored
@@ -11,6 +12,4 @@ Check out the `example.yml` file, all games are in the `YAML` format.
 Download/clone the repo and run the `__main__.py` file with the path to a game in `YAML` format as the first argument.
 
 ## TODO
-- Colors
-- Catching errors while parsing YAML
-- Maybe a welcome screen instead of the need to enter the path as argument
+[Here](https://github.com/hernikplays/texty/projects/1)
