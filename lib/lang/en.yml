@@ -1,3 +1,6 @@
+available: 'Available games:'
+no_games: 'No games found'
+
 yaml_unspecified: 'You need to specify a path to a YAML file'
 game_by: 'A game by $author'
 start: 'Start'
@@ -16,4 +19,4 @@ selection: 'Make a selection (number):'
 not_number: 'Not a number selection'
 invalid: 'Invalid selection'
 
-error_loading: 'An exception has occured while loading the game from the YAML file:'
+error_loading: 'An exception has occured while loading the game from the YAML file'
