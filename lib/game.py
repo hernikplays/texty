@@ -24,11 +24,11 @@ class Game: # the game class keeps information about the loaded game
         if not l:
             # New game
             print(self.name)
-            print(f"A game by {self.author}")
+            print(self.lang['game_by'].replace("$author",self.author))
             print("")
-            print("1 - Start")
-            print("2 - Options")
-            print("0 - Quit")
+            print(f"1 - {self.lang['start']}")
+            print(f"2 - {self.lang['options']}")
+            print(f"0 - {self.lang['quit']}")
             selection = self.make_selection(3)
             system("cls||clear")
             if(selection == 1): # start new game
@@ -36,16 +36,16 @@ class Game: # the game class keeps information about the loaded game
             elif(selection == 2):
                 self.settings_menu()
             elif(selection == 0):
-                print("Quitting")
+                print(self.lang['quitting'])
                 exit()
         else: # Display continue
             print(self.name)
-            print(f"A game by {self.author}")
+            print(self.lang['game_by'].replace("$author",self.author))
             print("")
-            print("1 - Continue")
-            print("2 - New game")
-            print("3 - Options")
-            print("0 - Quit")
+            print(f"1 - {self.lang['continue']}")
+            print(f"2 - {self.lang['new_name']}")
+            print(f"3 - {self.lang['settings']}")
+            print(f"0 - {self.lang['quit']}")
             selection = self.make_selection(3)
             system("cls||clear")
             if(selection == 1):
@@ -63,15 +63,15 @@ class Game: # the game class keeps information about the loaded game
     def settings_menu(self): # displays the settings menu
         print("Options")
         print("")
-        print("1 - Language")
+        print(f"1 - {self.lang['lang']}")
         print("0 - Back")
         selection = self.make_selection(1)
         if(selection == 1):
-            print("Language")
+            print(self.lang['lang'])
             print("")
             print("1 - English")
-            print("2 - Czech")
-            print("0 - Back")
+            print("2 - Česky")
+            print(f"0 - {self.lang['back']}")
             selection = self.make_selection(2)
             system("cls||clear")
             if(selection == 1):
@@ -94,11 +94,11 @@ class Game: # the game class keeps information about the loaded game
         # TODO: Check for "has_item"
         while y == False: # while the selection is not correct
             try:
-                selection = int(input("Make a selection (number): ")) # ask for selection
+                selection = int(input(self.lang['selection'])) # ask for selection
             except ValueError: # handle wrong input type
-                print("Not a number selection")
+                print(self.lang['not_number'])
             if(selection > l or selection < 0): # if the number is bigger than the length or smaller than 0, print error
-                print("Invalid selection")
+                print(self.lang['invalid'])
             else:
                 y = True # else return the selection
         return selection
@@ -138,18 +138,7 @@ class Game: # the game class keeps information about the loaded game
         newText += Fore.RESET # reset color at the end of the text
         return newText
 
-
-def load(file_path): # starts to load the game from YAML
-    lang = "en"
-    if not (path.exists("./saves/lang")):
-        mkdir("./saves")
-        with open("./saves/lang","w") as f:
-            f.write("en")
-    else:
-        with open("./saves/lang","r") as f:
-            lang = f.read()
-            if lang == "cz":
-                lang = "cz"
+def load(file_path,lang): # starts to load the game from YAML
     try:
         with open(file_path) as f:
             data = yaml.load(f,Loader=SafeLoader)
@@ -157,6 +146,6 @@ def load(file_path): # starts to load the game from YAML
             g.lang = lang
             return g
     except Exception as e:
-        print(f"{Back.RED}{Fore.WHITE}An exception has occured while loading the game from the YAML file:{Fore.RESET}{Back.RESET}")
+        print(f"{Back.RED}{Fore.WHITE}{g.lang['error_loading']}{Fore.RESET}{Back.RESET}")
         print(e)
         return None
