@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Start with example game",
+            "name": "Python: Start main",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/__main__.py",
-            "args": ["./example.yml"],
-            "console": "integratedTerminal"
+            "program": "${workspaceFolder}/__main__.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }

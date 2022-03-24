@@ -20,3 +20,4 @@ not_number: 'Nezadali jste číslo'
 invalid: 'Neplatný výběr'
 
 error_loading: 'Při načítání YAML souboru nastala chyba:'
+no_action: 'Chyba: žádná akce "$action" nenalezena v souboru hry'

@@ -1,7 +1,7 @@
 from genericpath import isdir
 from lib.game import *
 from colorama import init, Back, Fore
-from os import mkdir, listdir
+from os import mkdir, listdir, path
 
 def lang():
     lang = "en"
@@ -35,16 +35,15 @@ def main(): # TODO: Maybe a menu for available text games?
             except Exception as e:
                 print(f"{Back.RED}{Fore.RED}{l['error_loading']} {file}:")
                 print(e)
+    
     # PRINT OUT GAME SELECT
-    # TODO SWITCH TO MENU MANAGER
-    print("     TEXTY   ")
-    print(l['available'])
     if len(games) < 1:
         print(l['no_games'])
     else:
-        for i,g in enumerate(games):
-            print(f"{i} - {g.name}")
-    print(f"{len(games)} - {l['quit']}")
+        names = []
+        for n in games: names.append(n.name)
+        m = MenuManager(names,f"     TEXTY     \n{l['available']}")
+        games[m.selected].main_menu()
 
 
 if __name__ == "__main__":

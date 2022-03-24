@@ -20,3 +20,4 @@ not_number: 'Not a number selection'
 invalid: 'Invalid selection'
 
 error_loading: 'An exception has occured while loading the game from the YAML file'
+no_action: 'Error: No action "$action" found in the game file.'

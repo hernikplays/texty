@@ -1,11 +1,13 @@
 import yaml
 from yaml.loader import SafeLoader
-from colorama import Fore, Back, Style
+from colorama import Fore, Back
 import re
+
+from lib.menu import MenuManager
 from .save import SaveManager
 from .ascii import AsciiAnimation
 from time import sleep
-from os import system, path, mkdir
+from os import system
 
 class Game: # the game class keeps information about the loaded game
     def __init__(self,data:dict):
@@ -23,85 +25,48 @@ class Game: # the game class keeps information about the loaded game
         l = self.save.load()
         if not l:
             # New game
-            print(self.name)
-            print(self.lang['game_by'].replace("$author",self.author))
-            print("")
-            print(f"1 - {self.lang['start']}")
-            print(f"2 - {self.lang['options']}")
-            print(f"0 - {self.lang['quit']}")
-            selection = self.make_selection(3)
+            m = MenuManager([self.lang['start'],self.lang['options'],self.lang['quit']],f"{self.name}\n{self.lang['game_by'].replace('$author',self.author)}")
+            selection = m.selected
             system("cls||clear")
-            if(selection == 1): # start new game
+            if(selection == 0): # start new game
                 self.print_text()
-            elif(selection == 2):
+            elif(selection == 1):
                 self.settings_menu()
-            elif(selection == 0):
+            elif(selection == 2):
                 print(self.lang['quitting'])
                 exit()
         else: # Display continue
-            print(self.name)
-            print(self.lang['game_by'].replace("$author",self.author))
-            print("")
-            print(f"1 - {self.lang['continue']}")
-            print(f"2 - {self.lang['new_name']}")
-            print(f"3 - {self.lang['settings']}")
-            print(f"0 - {self.lang['quit']}")
-            selection = self.make_selection(3)
+            m = MenuManager([self.lang['continue'],self.lang['new_name'],self.lang['options'],self.lang['quit']],f"{self.name}\n{self.lang['game_by'].replace('$author',self.author)}")
+            selection = m.selected
             system("cls||clear")
-            if(selection == 1):
+            if(selection == 0):
                 self.current = self.save.currentPrompt
                 self.inventory = self.save.inventory
                 self.print_text()
-            elif(selection == 2):
+            elif(selection == 1):
                 self.print_text()
-            elif(selection == 3):
+            elif(selection == 2):
                 self.settings_menu()
-            elif(selection == 0):
-                print("Quitting")
+            elif(selection == 3):
+                print(self.lang['quitting'])
                 exit()
 
     def settings_menu(self): # displays the settings menu
-        print("Options")
-        print("")
-        print(f"1 - {self.lang['lang']}")
-        print("0 - Back")
-        selection = self.make_selection(1)
-        if(selection == 1):
-            print(self.lang['lang'])
-            print("")
-            print("1 - English")
-            print("2 - Česky")
-            print(f"0 - {self.lang['back']}")
-            selection = self.make_selection(2)
+        m = MenuManager([self.lang['lang'],self.lang['back']],self.lang['options'])
+        selection = m.selected
+        if(selection == 0):
+            m = MenuManager(["English","Česky",self.lang['back']],self.lang['lang'])
+            selection = m.selected
             system("cls||clear")
-            if(selection == 1):
+            if(selection == 0):
                 with open("./saves/lang","w") as f:
                     f.write("en")
-            elif(selection == 2):
+            elif(selection == 1):
                 with open("./saves/lang","w") as f:
                     f.write("cz")
             self.settings_menu()
         else:
             self.main_menu()
-
-    def make_selection(self, length=0) -> int: # this method makes sure a valid selection is made and returns the selection as a number
-        # TODO: replace with selection by keyboard(?)
-        l = length # sets the length
-        if(l == 0): # if no length was set, we get it from nodes
-            l = len(self.nodes[self.current]["actions"])-1
-        y = False
-        selection = 0
-        # TODO: Check for "has_item"
-        while y == False: # while the selection is not correct
-            try:
-                selection = int(input(self.lang['selection'])) # ask for selection
-            except ValueError: # handle wrong input type
-                print(self.lang['not_number'])
-            if(selection > l or selection < 0): # if the number is bigger than the length or smaller than 0, print error
-                print(self.lang['invalid'])
-            else:
-                y = True # else return the selection
-        return selection
     
     def print_text(self): # Prints out the current prompt
         system("cls||clear")
@@ -109,22 +74,27 @@ class Game: # the game class keeps information about the loaded game
         if(animated != None):
             self.print_animated(animated.group(0))
             self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace("{"+animated.group(0)+"}","") # remove the animated text from the text prompt
-        print(self.parse_colors(self.nodes[self.current]["text"]))
-        print("")
-        ostring = ""
         if("actions" in self.nodes[self.current].keys()):
-            for i,option in enumerate(self.nodes[self.current]["actions"]):
-                ostring+=f"{i} - {self.nodes[option]['description']}\n"
-            print(ostring)
-            sel = self.make_selection()
+            actions_desc = []
+            for option in self.nodes[self.current]["actions"]:
+                try:
+                    actions_desc.append(self.nodes[option]["description"])
+                except:
+                    print(f"{Back.RED}{Fore.WHITE}{self.lang['no_action'].replace('$action',option)}{Fore.RESET}")
+                    exit(1)
+            m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
+            sel = m.selected
             if "add_item" in self.nodes[self.current]: # if there is an add_inventory key in the node,
                 # add item to inventory
                 self.inventory.append(self.nodes[self.current]["add_inventory"])
             self.current = self.nodes[self.current]["actions"][sel]
             self.save.currentPrompt = self.current # save the current prompt
             self.print_text()
+        else:
+            print(self.parse_colors(self.nodes[self.current]["text"]))
+            print("")
 
-    def print_animated(self,animid): # prinst the first found occurence of an ascii animation
+    def print_animated(self,animid): # prints the first found occurence of an ascii animation
         animation = AsciiAnimation()
         animation.load_ascii(animid)
         for frame in animation.frames:
