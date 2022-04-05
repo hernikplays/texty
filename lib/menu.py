@@ -41,3 +41,28 @@ class MenuManager:
                 print(f"{Fore.RED}->{Fore.RESET} {selection}")
             else:
                 print(f"   {selection}")
+
+class HasItemDialogue(MenuManager):
+    '''
+    Custom handler for dialogue, that requires to check if the user has an item
+    '''
+    def __init__(self, selections: list, additional: str,inv:list,need_item:list):
+        self.inventory = inv
+        self.need_items = need_item
+        super().__init__(selections, additional)
+
+    def show_menu(self):
+        print(self.additional)
+        for i,selection in enumerate(self.selections):
+            if(self.need_items[i] != None and self.need_items[i] not in self.inv):
+                # user does not have the needed item
+                if(self.selected == i):
+                    print(f"{Fore.RED}-> {Fore.CYAN}{selection}{Fore.RESET} (Need '{self.need_items[i]}')")
+                else:
+                    print(f"   {Fore.CYAN}{selection}{Fore.RESET}")
+            else:
+                # we don't need to change color for an item user doesn't have
+                if(self.selected == i):
+                    print(f"{Fore.RED}->{Fore.RESET} {selection}")
+                else:
+                    print(f"   {selection}")

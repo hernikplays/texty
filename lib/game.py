@@ -3,7 +3,7 @@ from yaml.loader import SafeLoader
 from colorama import Fore, Back
 import re
 
-from lib.menu import MenuManager
+from lib.menu import HasItemDialogue, MenuManager
 from .save import SaveManager
 from .ascii import AsciiAnimation
 from time import sleep
@@ -76,13 +76,23 @@ class Game: # the game class keeps information about the loaded game
             self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace("{"+animated.group(0)+"}","") # remove the animated text from the text prompt
         if("actions" in self.nodes[self.current].keys()):
             actions_desc = []
+            need_item = []
             for option in self.nodes[self.current]["actions"]:
                 try:
                     actions_desc.append(self.nodes[option]["description"])
+                    if "has_item" in self.nodes[option].keys(): 
+                        need_item.append(self.nodes[option]["has_item"])
+                    else:
+                        need_item.append(None)
                 except:
                     print(f"{Back.RED}{Fore.WHITE}{self.lang['no_action'].replace('$action',option)}{Fore.RESET}")
                     exit(1)
-            m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
+            m = ""
+            if((element == None for element in need_item) is False):
+                # we need to check if user has item
+                m = HasItemDialogue(self.nodes[self.current]["actions"],self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+            else:
+                m = MenuManager(self.nodes[self.current]["actions"],self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
             if "add_item" in self.nodes[self.current]: # if there is an add_inventory key in the node,
                 # add item to inventory
