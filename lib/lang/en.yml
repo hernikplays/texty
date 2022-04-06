@@ -9,7 +9,11 @@ quit: 'Quit'
 quitting: 'Quitting'
 continue: 'Continue'
 new_game: 'New game'
+inventory: 'Show inventory'
 acquire: 'You acquired $item'
+
+inside_inv: "YOUR INVENTORY"
+return: "Return"
 
 lang: 'Language'
 back: 'Back'

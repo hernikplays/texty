@@ -21,6 +21,5 @@ class AsciiAnimation:
                             data = yaml.load(c,Loader=yaml.SafeLoader)
                             if(data["speed"] != None):
                                 self.speed = data["speed"]
-                        pass
                     with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as f: # add all frames into list
                         self.frames.append(f.read())
