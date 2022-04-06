@@ -21,12 +21,15 @@ game: # here goes all the game logic
   beer:
       description: "Order beer"
       text: "You order some &ebeer"
-      add_inventory: "Beer" # add something to inventory
+      add_item: "Beer" # add something to inventory
       actions:
         - do_something
   nothing:
     description: "Do nothing"
     text: "You sit and wait..."
+    actions:
+      - drink
+      - leave
   do_something:
     description: "Continue"
     text: "You start to feel bored."

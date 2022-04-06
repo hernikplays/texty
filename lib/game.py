@@ -70,13 +70,22 @@ class Game: # the game class keeps information about the loaded game
     
     def print_text(self): # Prints out the current prompt
         system("cls||clear")
+        if "add_item" in self.nodes[self.current].keys(): # if there is an add_inventory key in the node,
+                # add item to inventory
+                item = self.nodes[self.current]['add_item']
+                self.inventory.append(item)
+                print(self.inventory)
+                system("clear||cls")
+                print(f"{self.lang['acquire'].replace('$item',f'{Fore.CYAN}{item}{Fore.RESET}')}")
+                sleep(3)
+                system("clear||cls")
         animated = re.search(r"(?!{).+(?=})",self.nodes[self.current]["text"]) # find the animated text
         if(animated != None):
             self.print_animated(animated.group(0))
             self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace("{"+animated.group(0)+"}","") # remove the animated text from the text prompt
         if("actions" in self.nodes[self.current].keys()):
-            actions_desc = []
-            need_item = []
+            actions_desc = [] # has descriptions of text prompts, so that we don't need to find them in MenuManager
+            need_item = [] # helps implement a check for needing an item
             for option in self.nodes[self.current]["actions"]:
                 try:
                     actions_desc.append(self.nodes[option]["description"])
@@ -88,15 +97,16 @@ class Game: # the game class keeps information about the loaded game
                     print(f"{Back.RED}{Fore.WHITE}{self.lang['no_action'].replace('$action',option)}{Fore.RESET}")
                     exit(1)
             m = ""
-            if((element == None for element in need_item) is False):
+            if(all(element == None for element in need_item) is False):
                 # we need to check if user has item
-                m = HasItemDialogue(self.nodes[self.current]["actions"],self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+                m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+                print(self.inventory)
+                while need_item[m.selected] != None and all(element not in self.inventory for element in need_item[m.selected]): # until user selects an available prompt, re-prompt again
+                    m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
             else:
-                m = MenuManager(self.nodes[self.current]["actions"],self.parse_colors(self.nodes[self.current]["text"]))
+                m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
-            if "add_item" in self.nodes[self.current]: # if there is an add_inventory key in the node,
-                # add item to inventory
-                self.inventory.append(self.nodes[self.current]["add_inventory"])
+            
             self.current = self.nodes[self.current]["actions"][sel]
             self.save.currentPrompt = self.current # save the current prompt
             self.print_text()

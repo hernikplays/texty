@@ -9,6 +9,7 @@ quit: 'Quit'
 quitting: 'Quitting'
 continue: 'Continue'
 new_game: 'New game'
+acquire: 'You acquired $item'
 
 lang: 'Language'
 back: 'Back'

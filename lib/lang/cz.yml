@@ -9,6 +9,7 @@ quit: 'Vypnout'
 quitting: 'Vypínám'
 continue: 'Pokračovat'
 new_game: 'Nová hra'
+acquire: 'Získal jsi $item'
 
 lang: 'Jazyk'
 back: 'Zpět'
