@@ -107,6 +107,9 @@ class Game: # the game class keeps information about the loaded game
                 # TODO: Remove item from inventory after using it?
                 while need_item[m.selected] != None and all(element not in self.inventory for element in need_item[m.selected]): # until user selects an available prompt, re-prompt again
                     m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+                if "has_item" in self.nodes[m.selected].keys():
+                    for item in need_item[m.selected]:
+                        self.inventory.remove(item)
             else:
                 m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
