@@ -21,24 +21,28 @@ game: # here goes all the game logic
   beer:
       description: "Order beer"
       text: "You order some &ebeer"
-      add_inventory: "Beer" # add something to inventory
+      add_item: "Beer" # add something to inventory
+      actions:
+        - do_something
   nothing:
     description: "Do nothing"
     text: "You sit and wait..."
     actions:
-      - last
-  last:
-    description: 'Continue'
-    text: 'You look around the tavern'
+      - drink
+      - leave
+  do_something:
+    description: "Continue"
+    text: "You start to feel bored."
     actions:
       - drink
-      - sitmore
+      - leave
   drink:
-    needs_item:
-      - 'Beer'
+    has_item: ["Beer"] # item names are case-sensitive
     description: "Drink beer"
-    text: 'You take a sip of your beer'
-  sitmore:
-    description: 'Sit some more'
-    text: 'You sit some more...'
+    text: "You take a sip of your cold &eBeer"
+    actions:
+      - leave
+  leave:
+    description: "Leave"
+    text: "You decide to leave."
 

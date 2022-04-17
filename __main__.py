@@ -19,7 +19,7 @@ def lang():
         data = yaml.load(f,Loader=SafeLoader)
     return data
 
-def main(): # TODO: Maybe a menu for available text games?
+def main():
     l = lang()
     init()
     if(not isdir("./games")):
@@ -41,7 +41,8 @@ def main(): # TODO: Maybe a menu for available text games?
         print(l['no_games'])
     else:
         names = []
-        for n in games: names.append(n.name)
+        for n in games: 
+            names.append(n.name)
         m = MenuManager(names,f"     TEXTY     \n{l['available']}")
         games[m.selected].main_menu()
 

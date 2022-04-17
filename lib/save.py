@@ -5,7 +5,6 @@ class SaveManager: # manages save and configuration files
     def __init__(self):
         self.id = "" # game ID
         self.currentPrompt = "" # Current prompt
-        self.lang = "" # Selected language
         self.inventory = [] # Items in inventory
 
     def load(self):
@@ -18,6 +17,6 @@ class SaveManager: # manages save and configuration files
         return False
 
     def save(self):
-        data = {"id":self.id,"currentPrompt":self.currentPrompt,"inventory":self.inventory,"lang":self.lang}
+        data = {"id":self.id,"currentPrompt":self.currentPrompt,"inventory":self.inventory}
         with open(f"./saves/{self.id}.yml",mode="w",encoding="utf-8") as f:
             yaml.dump(data,f)

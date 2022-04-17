@@ -1,9 +1,10 @@
+import enum
 import yaml
 from yaml.loader import SafeLoader
 from colorama import Fore, Back
 import re
 
-from lib.menu import MenuManager
+from lib.menu import HasItemDialogue, MenuManager
 from .save import SaveManager
 from .ascii import AsciiAnimation
 from time import sleep
@@ -70,29 +71,74 @@ class Game: # the game class keeps information about the loaded game
     
     def print_text(self): # Prints out the current prompt
         system("cls||clear")
+        if "add_item" in self.nodes[self.current].keys(): # if there is an add_inventory key in the node,
+                # add item to inventory
+                item = self.nodes[self.current]['add_item']
+                if item not in self.inventory:
+                    self.inventory.append(item)
+                    print(self.inventory)
+                    system("clear||cls")
+                    print(f"{self.lang['acquire'].replace('$item',f'{Fore.CYAN}{item}{Fore.RESET}')}")
+                    sleep(3)
+                    system("clear||cls")
         animated = re.search(r"(?!{).+(?=})",self.nodes[self.current]["text"]) # find the animated text
         if(animated != None):
             self.print_animated(animated.group(0))
             self.nodes[self.current]["text"] = self.nodes[self.current]["text"].replace("{"+animated.group(0)+"}","") # remove the animated text from the text prompt
         if("actions" in self.nodes[self.current].keys()):
-            actions_desc = []
+            actions_desc = [] # has descriptions of text prompts, so that we don't need to find them in MenuManager
+            need_item = [] # helps implement a check for needing an item
             for option in self.nodes[self.current]["actions"]:
                 try:
                     actions_desc.append(self.nodes[option]["description"])
-                except:
+                    if "has_item" in self.nodes[option].keys(): 
+                        need_item.append(self.nodes[option]["has_item"])
+                    else:
+                        need_item.append(None)
+                except Exception:
                     print(f"{Back.RED}{Fore.WHITE}{self.lang['no_action'].replace('$action',option)}{Fore.RESET}")
                     exit(1)
-            m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
+            m = ""
+            actions_desc.extend([self.lang['inventory'],self.lang['quit']])
+            if(all(element == None for element in need_item) is False):
+                need_item.extend([None, None])
+                # we need to check if user has item
+                m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+                # TODO: Remove item from inventory after using it?
+                while need_item[m.selected] != None and all(element not in self.inventory for element in need_item[m.selected]): # until user selects an available prompt, re-prompt again
+                    m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
+                if "has_item" in self.nodes[m.selected].keys():
+                    for item in need_item[m.selected]:
+                        self.inventory.remove(item)
+            else:
+                m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
-            if "add_item" in self.nodes[self.current]: # if there is an add_inventory key in the node,
-                # add item to inventory
-                self.inventory.append(self.nodes[self.current]["add_inventory"])
-            self.current = self.nodes[self.current]["actions"][sel]
-            self.save.currentPrompt = self.current # save the current prompt
-            self.print_text()
+            if(sel == len(actions_desc)-2): # show inventory
+                self.show_inventory()
+            elif (sel == len(actions_desc)-1): # Save & quit
+                self.save.currentPrompt = self.current # save the current prompt
+                self.save.inventory = self.inventory
+                self.save.save()
+                exit(0)
+            else:
+                self.current = self.nodes[self.current]["actions"][sel]
+                self.print_text()
         else:
             print(self.parse_colors(self.nodes[self.current]["text"]))
             print("")
+
+    def show_inventory(self):
+        if len(self.inventory) == 0:
+            MenuManager([self.lang["return"]],f"    YOUR INVENTORY    \n")
+        else:
+            s = ""
+            for i,item in enumerate(self.inventory):
+                if(i == len(self.inventory)): # last item
+                    s += f"- {item}"
+                else:
+                    s += f"- {item}\n"
+            MenuManager([self.lang["return"]],f"    YOUR INVENTORY    \n{s}")
+        self.print_text()
 
     def print_animated(self,animid): # prints the first found occurence of an ascii animation
         animation = AsciiAnimation()
