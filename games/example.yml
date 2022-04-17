@@ -25,4 +25,20 @@ game: # here goes all the game logic
   nothing:
     description: "Do nothing"
     text: "You sit and wait..."
+    actions:
+      - last
+  last:
+    description: 'Continue'
+    text: 'You look around the tavern'
+    actions:
+      - drink
+      - sitmore
+  drink:
+    needs_item:
+      - 'Beer'
+    description: "Drink beer"
+    text: 'You take a sip of your beer'
+  sitmore:
+    description: 'Sit some more'
+    text: 'You sit some more...'
 
