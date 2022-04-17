@@ -1,4 +1,3 @@
-import enum
 import yaml
 from yaml.loader import SafeLoader
 from colorama import Fore, Back
@@ -17,8 +16,8 @@ class Game: # the game class keeps information about the loaded game
         self.current = "start"
         self.nodes = {}
         self.inventory = []
-        self.save = SaveManager()
         self.id = data["meta"]["id"]
+        self.save = SaveManager(self.id)
         for k in data["game"]:
             self.nodes.update({k:data["game"][k]})
 
@@ -37,7 +36,7 @@ class Game: # the game class keeps information about the loaded game
                 print(self.lang['quitting'])
                 exit()
         else: # Display continue
-            m = MenuManager([self.lang['continue'],self.lang['new_name'],self.lang['options'],self.lang['quit']],f"{self.name}\n{self.lang['game_by'].replace('$author',self.author)}")
+            m = MenuManager([self.lang['continue'],self.lang['new_game'],self.lang['options'],self.lang['quit']],f"{self.name}\n{self.lang['game_by'].replace('$author',self.author)}")
             selection = m.selected
             system("cls||clear")
             if(selection == 0):
@@ -143,10 +142,7 @@ class Game: # the game class keeps information about the loaded game
     def print_animated(self,animid): # prints the first found occurence of an ascii animation
         animation = AsciiAnimation()
         animation.load_ascii(animid)
-        for frame in animation.frames:
-            system("cls||clear")
-            print(frame)
-            sleep(animation.speed)
+        animation.play()
         print()
         
     def parse_colors(self,text:str) -> str: # Converts color codes into terminal colors

@@ -2,8 +2,8 @@ from os import path
 import yaml
 
 class SaveManager: # manages save and configuration files
-    def __init__(self):
-        self.id = "" # game ID
+    def __init__(self,id:str):
+        self.id = id # game ID
         self.currentPrompt = "" # Current prompt
         self.inventory = [] # Items in inventory
 
