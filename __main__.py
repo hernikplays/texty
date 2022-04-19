@@ -33,7 +33,7 @@ def main():
                 g = load(f"./games/{file}",l)
                 games.append(g)
             except Exception as e:
-                print(f"{Back.RED}{Fore.RED}{l['error_loading']} {file}:")
+                print(f"{Back.RED}{Fore.WHITE}{l['error_loading']} {file}{Fore.RESET}{Back.RESET}:")
                 print(e)
     
     # PRINT OUT GAME SELECT
@@ -42,7 +42,8 @@ def main():
     else:
         names = []
         for n in games: 
-            names.append(n.name)
+            if(n is not None): 
+                names.append(n.name)
         m = MenuManager(names,f"     TEXTY     \n{l['available']}")
         games[m.selected].main_menu()
 

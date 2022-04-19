@@ -11,13 +11,30 @@ from os import system
 
 class Game: # the game class keeps information about the loaded game
     def __init__(self,data:dict):
-        self.name = data["meta"]["name"]
-        self.author = data["meta"]["creator"]
-        self.current = "start"
-        self.nodes = {}
-        self.inventory = []
-        self.id = data["meta"]["id"]
-        self.save = SaveManager(self.id)
+        self.name = data["meta"]["name"] # Game name
+        self.author = data["meta"]["creator"] # Game creator
+        self.current = "start" # Current prompt
+        self.nodes = {} # All nodes
+        self.inventory = [] # Player's inventory
+        self.id = data["meta"]["id"]  # Game ID
+        self.save = SaveManager(self.id) # saving
+        self.equipped = {"weapon":None,"armor":None} # Items equipped by player
+        if "equippable" in data["meta"].keys():
+            self.equippable = [] # Items that can be equipped by player
+            for item in data["meta"]["equippable"]:
+                name = list(item.keys())[0]
+                if "def" in item[name].keys() and "atk" in item[name].keys():
+                    self.equippable.append(Item(name,item[name]["atk"],item[name]["def"]))
+                elif "def" in item[name].keys():
+                    self.equippable.append(Item(name=name,defense=item[name]["def"]))
+                elif "atk" in item[name].keys():
+                    self.equippable.append(Item(name,item[name]["atk"]))
+                if("starter" in item[name].keys()): # if starter, equip and add to inventory
+                    if item[name]["starter"]:
+                        i = next((x for x in self.equippable if x.name == list(item.keys())[0]))
+                        self.inventory.append(i)
+                        self.equipped[i.type] = i
+                    
         for k in data["game"]:
             self.nodes.update({k:data["game"][k]})
 
@@ -128,7 +145,7 @@ class Game: # the game class keeps information about the loaded game
 
     def show_inventory(self):
         if len(self.inventory) == 0:
-            MenuManager([self.lang["return"]],f"    YOUR INVENTORY    \n")
+            MenuManager([self.lang["return"]],f"    {self.lang['inside_inv']}    \n")
         else:
             s = ""
             for i,item in enumerate(self.inventory):
@@ -136,7 +153,7 @@ class Game: # the game class keeps information about the loaded game
                     s += f"- {item}"
                 else:
                     s += f"- {item}\n"
-            MenuManager([self.lang["return"]],f"    YOUR INVENTORY    \n{s}")
+            MenuManager([self.lang["return"]],f"    {self.lang['inside_inv']}    \n{s}")
         self.print_text()
 
     def print_animated(self,animid): # prints the first found occurence of an ascii animation
@@ -158,6 +175,16 @@ def load(file_path,lang): # starts to load the game from YAML
             g.lang = lang
             return g
     except Exception as e:
-        print(f"{Back.RED}{Fore.WHITE}{g.lang['error_loading']}{Fore.RESET}{Back.RESET}")
+        print(f"{Back.RED}{Fore.WHITE}ERROR{Fore.RESET}{Back.RESET}")
         print(e)
         return None
+
+class Item:
+    def __init__(self,name:str,attack:int = 0,defense:int = 0) -> None:
+        self.name = name
+        if attack == 0 and defense > 0:
+            self.type = "armor"
+        else:
+            self.type = "weapon"
+        self.attack = attack
+        self.defense = defense

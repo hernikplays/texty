@@ -2,6 +2,13 @@ meta: # make sure every key is in lowercase
   name: "My Text Adventure" # Game name
   id: "examplegame" # An original game ID (please try to be original)
   creator: "hernik" # Your name as a creator
+  equippable:
+    - iron_sword:
+        atk: 3
+        starter: true
+    - chainmail:
+        def: 2
+        starter: true
 
 game: # here goes all the game logic
   start: # the starting point always HAS to be named "start" (lowercase), the order and name of the rest does not matter
