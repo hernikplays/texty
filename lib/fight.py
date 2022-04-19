@@ -4,9 +4,10 @@ from lib.game import Item
 from .ascii import *
 from colorama import Fore
 import keyboard
+from random import randrange
 
 class FightHandler:
-    def __init__(self,message:str,name:str,hp:int,attacks:list,lang:dict,eq:Item,img:str="") -> None:
+    def __init__(self,message:str,name:str,hp:int,attacks:dict,lang:dict,eq:Item,img:str="") -> None:
         self.selected = 0
         keyboard.add_hotkey("up",self.up)
         keyboard.add_hotkey("down",self.down)
@@ -56,5 +57,5 @@ class FightHandler:
                 print(f"  {selection}")
         
     def attack(self):
-        self.hp
+        self.hp -= self.attacks[randrange(len(self.attacks))][atk].
         input()
