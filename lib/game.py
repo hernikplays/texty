@@ -6,6 +6,7 @@ import re
 from lib.menu import HasItemDialogue, MenuManager
 from .save import SaveManager
 from .ascii import AsciiAnimation
+from .fight import *
 from time import sleep
 from os import system
 
@@ -19,6 +20,7 @@ class Game: # the game class keeps information about the loaded game
         self.id = data["meta"]["id"]  # Game ID
         self.save = SaveManager(self.id) # saving
         self.equipped = {"weapon":None,"armor":None} # Items equipped by player
+        self.enemies = {} # Enemies
         if "equippable" in data["meta"].keys():
             self.equippable = [] # Items that can be equipped by player
             for item in data["meta"]["equippable"]:
@@ -34,7 +36,11 @@ class Game: # the game class keeps information about the loaded game
                         i = next((x for x in self.equippable if x.name == list(item.keys())[0]))
                         self.inventory.append(i)
                         self.equipped[i.type] = i
-                    
+        if "enemies" in data["meta"].keys():
+            # Load enemies
+            for en in data["meta"]["enemies"]:
+                name = list(en.keys())[0]
+                self.enemies[name] = {"name":en["name"],"hp":en["hp"],"attacks":en["attacks"],"def":en["def"]}
         for k in data["game"]:
             self.nodes.update({k:data["game"][k]})
 
@@ -120,12 +126,18 @@ class Game: # the game class keeps information about the loaded game
                 need_item.extend([None, None])
                 # we need to check if user has item
                 m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
-                # TODO: Remove item from inventory after using it?
                 while need_item[m.selected] != None and all(element not in self.inventory for element in need_item[m.selected]): # until user selects an available prompt, re-prompt again
                     m = HasItemDialogue(actions_desc,self.parse_colors(self.nodes[self.current]["text"]),self.inventory,need_item)
                 if m.selected <= len(actions_desc)-3 and "has_item" in self.nodes[self.nodes[self.current]["actions"][m.selected]].keys():
                     for item in need_item[m.selected]:
                         self.inventory.remove(item)
+            elif "fight" in self.nodes[self.current].keys():
+                # Initiate a fight
+                enemy = self.enemies[self.nodes[self.current]["fight"]] # TODO: Complete after fight actions
+                s = FightHandler(self.nodes[self.current]["text"],enemy["name"],enemy["hp"],enemy["def"],enemy["attacks"],self.lang,self.equipped)
+                while s.hp > 0:
+                    s.show()
+                    input()
             else:
                 m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected

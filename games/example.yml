@@ -9,6 +9,18 @@ meta: # make sure every key is in lowercase
     - chainmail:
         def: 2
         starter: true
+  enemies:
+    - john:
+      name: "John"
+      hp: 20
+      def: 1
+      attacks:
+        - slash:
+            atk: 2
+            name: "Slash"
+        - boom: 
+            atk: 1
+            name: "Boom"
 
 game: # here goes all the game logic
   start: # the starting point always HAS to be named "start" (lowercase), the order and name of the rest does not matter
@@ -51,5 +63,20 @@ game: # here goes all the game logic
       - leave
   leave:
     description: "Leave"
-    text: "You decide to leave."
+    text: "You decide to leave. But John Doe blocks your way!"
+    fight: john
+    actions:
+    - af
+  af:
+    description: "Continue"
+    text: "&cJohn&r: I'm really sorry for attacking you, I don't know what I was doing!"
+    actions:
+    - idc
+    - ok
+  idc:
+    description: "Leave silently"
+    text: "You decide to turn around and leave without saying a word."
+  ok:
+    description: "Accept apology"
+    text: "&cJohn&r: Oh, thank you, kind sir!"
 

@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/__main__.py",
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "justMyCode": true,
         }
     ]
