@@ -14,6 +14,7 @@ acquire: 'You acquired $item'
 
 inside_inv: "YOUR INVENTORY"
 return: "Return"
+equipped: "EQUIPPED"
 
 lang: 'Language'
 back: 'Back'

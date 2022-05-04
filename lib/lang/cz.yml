@@ -14,6 +14,7 @@ acquire: 'Získal jsi $item'
 
 inside_inv: "VÁŠ INVENTÁŘ"
 return: "Vrátit se"
+equipped: "VYBAVENO"
 
 lang: 'Jazyk'
 back: 'Zpět'

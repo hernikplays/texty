@@ -12,10 +12,10 @@ class FightHandler:
         self.selected = 0
         self.rebind()
         self.name = name
-        self.max = hp # starting ENEMY HP
-        self.hp = self.max # current ENEMY HP
-        self.enemyDef = defense # ENEMY DEF
-        self.my = 30 # starting PLAYER HP TODO: maybe make this a variable
+        self.max = hp # životy nepřítele
+        self.hp = self.max # AKTUÁLNÍ životy nepřítele
+        self.enemyDef = defense # Obrana nepřítele
+        self.my = 30 # životy hráče TODO: maybe make this a variable
         self.attacks = attacks
         self.img = img
         self.lang = lang
@@ -73,7 +73,7 @@ class FightHandler:
         keyboard.add_hotkey("down",self.down)
         keyboard.add_hotkey("enter",self.make_selection)
 
-    def show_inventory(self): # Basically `Game` show_inventory
+    def show_inventory(self): # Zobrazuje inventář TODO: Možná taky equipovat?
         system("cls||clear")
         if len(self.inventory) == 0:
             FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n")
@@ -81,36 +81,36 @@ class FightHandler:
             s = ""
             for i,item in enumerate(self.inventory):
                 if type(item) is not str:
-                    if(i == len(self.inventory)): # last item
+                    if(i == len(self.inventory)):
                         s += f"- {item.name}"
                     else:
                         s += f"- {item.name}\n"
                 else:
-                    if(i == len(self.inventory)): # last item
+                    if(i == len(self.inventory)):
                         s += f"- {item}"
                     else:
                         s += f"- {item}\n"
             FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n{s}")
 
-    def attack(self):
+    def attack(self): # Provede útok vypočítáním ze statů útoku a obrany
         p = randrange(len(self.attacks))
         name = list(self.attacks[p].keys())[0]
         enemyAtk = self.attacks[p][name]["atk"]
         enemyDef = self.enemyDef
         playerAtk = self.equipped["weapon"].attack
         playerDef = self.equipped["armor"].defense
-        self.hp -= playerAtk - enemyDef # enemy takes damage
-        self.my -= enemyAtk - playerDef # player takes damage
-        self.message = f"{self.lang['enemydmg'].replace('$atk',str(playerAtk - enemyDef)).replace('$name',self.name)}\n{self.lang['playerdmg'].replace('$atk',str(enemyAtk - playerDef)).replace('$name',self.attacks[p][name]['name'])}"
+        self.hp -= playerAtk - enemyDef # zásah nepříteli
+        self.my -= enemyAtk - playerDef # zásah hráči
+        self.message = f"{self.lang['enemydmg'].replace('$atk',str(playerAtk - enemyDef)).replace('$name',self.name)}\n{self.lang['playerdmg'].replace('$atk',str(enemyAtk - playerDef)).replace('$name',self.attacks[p][name]['name'])}" # Změnit zprávu
 
     def defend(self):
         self.message = self.lang["defended"]
 
-class FightMenu(MenuManager):
+class FightMenu(MenuManager): # Upravené menu, které nemá input na konci, protože to jinak buguje
     def __init__(self,selections:list,additional:str):
-        self.selected = 0 # current selection
-        self.selections = selections # available selections
-        self.additional = additional # additional text to display above the menu
+        self.selected = 0
+        self.selections = selections
+        self.additional = additional 
         keyboard.add_hotkey("up",self.up)
         keyboard.add_hotkey("down",self.down)
         keyboard.add_hotkey("enter",self.make_selection)

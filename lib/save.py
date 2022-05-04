@@ -4,29 +4,28 @@ import yaml
 
 from lib.game import Item
 
-class SaveManager: # manages save and configuration files
+class SaveManager: # Spravuje ukládání
     def __init__(self,gid:str,lang):
-        self.id = gid # game ID
-        self.currentPrompt = "" # Current prompt
-        self.inventory = [] # Items in inventory
+        self.id = gid # ID hry
+        self.currentPrompt = "" # Aktuální node
+        self.inventory = [] # Předměty v inventáři
         self.version = 1
         self.lang = lang
 
     def load(self):
         if(path.exists(f"./saves/{self.id}.yml")):
             with open(f"./saves/{self.id}.yml",encoding="utf-8") as f:
-                data = yaml.load(f,Loader=yaml.SafeLoader)
+                data = yaml.load(f,Loader=yaml.SafeLoader) # Načteme z YAMLu
                 self.currentPrompt = data["currentPrompt"]
-                if(data["version"] < self.version):
+                if(data["version"] < self.version): # V případě nekompatibility zobrazit varování
                     system("cls||clear")
                     print(self.lang["no_comp"])
                     sleep(5)
                 inv = []
-                for item in data["inventory"]:
+                for item in data["inventory"]: # Zpracovat inventář (zvlášť pouze text a zvlášť vybavitelné)
                     if type(item) is str:
                         inv.append(item)
                     else:
-                        # Item class
                         inv.append(Item(item["name"],item["atk"],item["def"]))
                 return True
         return False
@@ -37,7 +36,7 @@ class SaveManager: # manages save and configuration files
             if type(item) is str:
                 inv.append(item)
             else:
-                # Item class
+                # Pro vybavitelné předměty
                 inv.append({"name":item.name,"atk":item.attack,"def":item.defense})
         data = {"id":self.id,"currentPrompt":self.currentPrompt,"inventory":self.inventory,"version":1}
         with open(f"./saves/{self.id}.yml",mode="w",encoding="utf-8") as f:

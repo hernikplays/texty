@@ -13,16 +13,16 @@ class AsciiAnimation:
         Loads art from .asc file
         """
 
-        with TemporaryDirectory() as tmpdir: # we enter a temporary directory
-            with ZipFile(f"./assets/{name}.asc","r") as z: # extract the asc file
+        with TemporaryDirectory() as tmpdir: # Vytvoříme dočasnou složku
+            with ZipFile(f"./assets/{name}.asc","r") as z: # Extrahujeme asc soubor
                 z.extractall(f"{tmpdir}/ascii/{name}")
-                for f in listdir(f"{tmpdir}/ascii/{name}"): # read all the files
+                for f in listdir(f"{tmpdir}/ascii/{name}"): # Přečte soubory
                     if f == "config.yml":
                         with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as c:
                             data = yaml.load(c,Loader=yaml.SafeLoader)
                             if(data["speed"] != None):
                                 self.speed = data["speed"]
-                    with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as f: # add all frames into list
+                    with open(f"{tmpdir}/ascii/{name}/{f}",encoding="utf-8") as f: # Přidá všechny snímky do seznamu
                         self.frames.append(f.read())
 
     def play(self):

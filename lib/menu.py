@@ -3,12 +3,12 @@ import keyboard
 from colorama import Fore
 class MenuManager:
     '''
-    Creates text menus controllable with arrow keys
+    Vytváří navigovatelná textová menu
     '''
     def __init__(self,selections:list,additional:str):
-        self.selected = 0 # current selection
-        self.selections = selections # available selections
-        self.additional = additional # additional text to display above the menu
+        self.selected = 0 # aktuální výběr
+        self.selections = selections # Dostupné možnosti
+        self.additional = additional # Text, který se zobrazí nad menu
         keyboard.add_hotkey("up",self.up)
         keyboard.add_hotkey("down",self.down)
         keyboard.add_hotkey("enter",self.make_selection)
@@ -45,7 +45,7 @@ class MenuManager:
 
 class HasItemDialogue(MenuManager):
     '''
-    Custom handler for dialogue, that requires to check if the user has an item
+    Odvozená třída pro kontrolu, zda-li má hráč předmět
     '''
     def __init__(self, selections: list, additional: str,inv:list,need_item:list):
         system("cls||clear")
