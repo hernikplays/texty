@@ -29,6 +29,9 @@ defend: "Defend"
 enemydmg: "$name took $atk damage!"
 playerdmg: "The enemy used $name to damage you by $atk"
 defended: "You decide to defend yourself and take no damage."
+defeated: "You have defeated $enemy."
+defeat: "$enemy has slain you. You'll have to try again."
 
 error_loading: 'An exception has occured while loading the game from the YAML file'
 no_action: 'Error: No action "$action" found in the game file.'
+no_comp: "WARNING: This save is for an older version of the engine and may not be compatible!"

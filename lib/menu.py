@@ -15,7 +15,7 @@ class MenuManager:
         self.show_menu()
         input()
 
-    def make_selection(self) -> int:
+    def make_selection(self) -> None:
         keyboard.remove_all_hotkeys()
 
     def up(self):

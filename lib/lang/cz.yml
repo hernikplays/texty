@@ -29,6 +29,9 @@ defend: "Bránit se"
 enemydmg: "$name dostal zásah za $atk bodů!"
 playerdmg: "Nepřítel použil $name a poškodil tě za $atk bodů."
 defended: "Rozhodneš se bránit a nedostal jsi tak žádný zásah."
+defeated: "Porazil jsi $enemy."
+defeat: "$enemy tě zabil. Budeš to muset zkusit znovu."
 
 error_loading: 'Při načítání YAML souboru nastala chyba:'
 no_action: 'Chyba: žádná akce "$action" nenalezena v souboru hry'
+no_comp: "VAROVÁNÍ: Tato uložená hra je pro starší verzi enginu a nemusí být kompatibilní!"

@@ -2,6 +2,7 @@ import yaml
 from yaml.loader import SafeLoader
 from colorama import Fore, Back
 import re
+from lib.item import Item
 
 from lib.menu import HasItemDialogue, MenuManager
 from .save import SaveManager
@@ -11,14 +12,15 @@ from time import sleep
 from os import system
 
 class Game: # the game class keeps information about the loaded game
-    def __init__(self,data:dict):
+    def __init__(self,data:dict,lang):
         self.name = data["meta"]["name"] # Game name
         self.author = data["meta"]["creator"] # Game creator
         self.current = "start" # Current prompt
         self.nodes = {} # All nodes
         self.inventory = [] # Player's inventory
         self.id = data["meta"]["id"]  # Game ID
-        self.save = SaveManager(self.id) # saving
+        self.lang = lang # Language strings
+        self.save = SaveManager(self.id,self.lang) # saving
         self.equipped = {"weapon":None,"armor":None} # Items equipped by player
         self.enemies = {} # Enemies
         if "equippable" in data["meta"].keys():
@@ -134,10 +136,27 @@ class Game: # the game class keeps information about the loaded game
             elif "fight" in self.nodes[self.current].keys():
                 # Initiate a fight
                 enemy = self.enemies[self.nodes[self.current]["fight"]] # TODO: Complete after fight actions
-                s = FightHandler(self.nodes[self.current]["text"],enemy["name"],enemy["hp"],enemy["def"],enemy["attacks"],self.lang,self.equipped)
-                while s.hp > 0:
-                    s.show()
+                m = FightHandler(self.nodes[self.current]["text"],enemy["name"],enemy["hp"],enemy["def"],enemy["attacks"],self.lang,self.equipped,self.inventory)
+                input()
+                while m.hp > 0 and m.my > 0:
+                    m.show()
+                    m.rebind() # rebind due to MenuManager in show_inventory
                     input()
+                system("cls||clear")
+                keyboard.remove_all_hotkeys()
+                if m.hp < 1:
+                    # Enemy defeated
+                    print(self.lang["defeated"].replace("$enemy",enemy["name"]))
+                    sleep(5)
+                    self.current = self.nodes[self.current]["actions"][0] # move to the first action
+                    self.print_text()
+                    return
+                else:
+                    # Player defeated
+                    print(self.lang["defeat"].replace("$enemy",enemy["name"]))
+                    sleep(5)
+                    self.print_text()
+                    return
             else:
                 m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
@@ -161,10 +180,16 @@ class Game: # the game class keeps information about the loaded game
         else:
             s = ""
             for i,item in enumerate(self.inventory):
-                if(i == len(self.inventory)): # last item
-                    s += f"- {item}"
+                if type(item) is Item:
+                    if(i == len(self.inventory)): # last item
+                        s += f"- {item.name}"
+                    else:
+                        s += f"- {item.name}\n"
                 else:
-                    s += f"- {item}\n"
+                    if(i == len(self.inventory)): # last item
+                        s += f"- {item}"
+                    else:
+                        s += f"- {item}\n"
             MenuManager([self.lang["return"]],f"    {self.lang['inside_inv']}    \n{s}")
         self.print_text()
 
@@ -183,20 +208,9 @@ def load(file_path,lang): # starts to load the game from YAML
     try:
         with open(file_path) as f:
             data = yaml.load(f,Loader=SafeLoader)
-            g = Game(data)
-            g.lang = lang
+            g = Game(data,lang)
             return g
     except Exception as e:
         print(f"{Back.RED}{Fore.WHITE}ERROR{Fore.RESET}{Back.RESET}")
         print(e)
         return None
-
-class Item:
-    def __init__(self,name:str,attack:int = 0,defense:int = 0) -> None:
-        self.name = name
-        if attack == 0 and defense > 0:
-            self.type = "armor"
-        else:
-            self.type = "weapon"
-        self.attack = attack
-        self.defense = defense

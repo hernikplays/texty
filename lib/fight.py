@@ -1,16 +1,16 @@
 import math
 
+from lib.menu import MenuManager
+
 from .ascii import *
 from colorama import Fore
 import keyboard
 from random import randrange
 
 class FightHandler:
-    def __init__(self,message:str,name:str,hp:int,defense:int,attacks:dict,lang:dict,eq:dict,img:str="") -> None:
+    def __init__(self,message:str,name:str,hp:int,defense:int,attacks:dict,lang:dict,eq:dict,inv:list,img:str="") -> None:
         self.selected = 0
-        keyboard.add_hotkey("up",self.up)
-        keyboard.add_hotkey("down",self.down)
-        keyboard.add_hotkey("enter",self.attack)
+        self.rebind()
         self.name = name
         self.max = hp # starting ENEMY HP
         self.hp = self.max # current ENEMY HP
@@ -21,6 +21,7 @@ class FightHandler:
         self.lang = lang
         self.message = message
         self.equipped = eq
+        self.inventory = inv
         self.show()
 
     def up(self):
@@ -40,6 +41,7 @@ class FightHandler:
         self.show()
 
     def show(self):
+        system("cls||clear")
         p = math.trunc(self.hp/self.max*10)
         h = "🟥"*p
         if str(p).endswith(".5"):
@@ -57,6 +59,39 @@ class FightHandler:
             else:
                 print(f"  {selection}")
         
+    def make_selection(self) -> None:
+        if self.selected == 0:
+            self.attack()
+        elif self.selected == 1:
+            self.defend()
+        elif self.selected == 2:
+            self.show_inventory()
+
+    def rebind(self):
+        keyboard.remove_all_hotkeys()
+        keyboard.add_hotkey("up",self.up)
+        keyboard.add_hotkey("down",self.down)
+        keyboard.add_hotkey("enter",self.make_selection)
+
+    def show_inventory(self): # Basically `Game` show_inventory
+        system("cls||clear")
+        if len(self.inventory) == 0:
+            FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n")
+        else:
+            s = ""
+            for i,item in enumerate(self.inventory):
+                if type(item) is not str:
+                    if(i == len(self.inventory)): # last item
+                        s += f"- {item.name}"
+                    else:
+                        s += f"- {item.name}\n"
+                else:
+                    if(i == len(self.inventory)): # last item
+                        s += f"- {item}"
+                    else:
+                        s += f"- {item}\n"
+            FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n{s}")
+
     def attack(self):
         p = randrange(len(self.attacks))
         name = list(self.attacks[p].keys())[0]
@@ -70,3 +105,13 @@ class FightHandler:
 
     def defend(self):
         self.message = self.lang["defended"]
+
+class FightMenu(MenuManager):
+    def __init__(self,selections:list,additional:str):
+        self.selected = 0 # current selection
+        self.selections = selections # available selections
+        self.additional = additional # additional text to display above the menu
+        keyboard.add_hotkey("up",self.up)
+        keyboard.add_hotkey("down",self.down)
+        keyboard.add_hotkey("enter",self.make_selection)
+        self.show_menu()
