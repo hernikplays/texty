@@ -150,13 +150,12 @@ class Game: # the game class keeps information about the loaded game
                     sleep(5)
                     self.current = self.nodes[self.current]["actions"][0] # move to the first action
                     self.print_text()
-                    return
                 else:
                     # Player defeated
                     print(self.lang["defeat"].replace("$enemy",enemy["name"]))
                     sleep(5)
                     self.print_text()
-                    return
+                return
             else:
                 m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
