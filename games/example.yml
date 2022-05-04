@@ -18,7 +18,7 @@ meta: # make sure every key is in lowercase
         - slash:
             atk: 2
             name: "Slash"
-        - boom: 
+        - boom:
             atk: 1
             name: "Boom"
 
