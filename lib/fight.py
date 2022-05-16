@@ -44,9 +44,15 @@ class FightHandler:
         system("cls||clear")
         p = math.trunc(self.hp/self.max*10)
         h = "🟥"*p
+
+        j = math.trunc(self.my/30*10)
+        a = "🟩"*j
         if str(p).endswith(".5"):
             h += "◾"
+        if str(a).endswith(".5"):
+            a += "◾"
         print(self.message)
+        print(f"{self.lang['you']} {a} {self.my}/30")
         print(f"{self.name} {h} {self.hp}/{self.max}")
         if self.img != "":
             anim = AsciiAnimation()
