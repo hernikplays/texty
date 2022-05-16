@@ -1,4 +1,5 @@
 from genericpath import isdir
+import sys
 from lib.game import *
 from colorama import init, Back, Fore
 from os import mkdir, listdir, path
@@ -27,16 +28,24 @@ def main():
     games = []
     for file in listdir("./games"):
         if file.endswith("yml") or file.endswith("yaml"):
-            # finds available games
-            try:
-                # try parsing
+            # hledá hry
+            if len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose"): # nepoužívá try/except pro vypsání celé chybové hlášky (debugování)
                 g = load(f"./games/{file}",l)
-                games.append(g)
-            except Exception as e:
-                print(f"{Back.RED}{Fore.WHITE}{l['error_loading']} {file}{Fore.RESET}{Back.RESET}:")
-                print(e)
+                if g is not None:
+                    games.append(g)
+            else:        
+                try:
+                    # parsuje
+                    g = load(f"./games/{file}",l)
+                    if g is not None:
+                        games.append(g)
+                except Exception as e:
+                    print(f"{Back.RED}{Fore.WHITE}{l['error_loading']} {file}{Fore.RESET}{Back.RESET}:")
+                    print(e)
+                    print(l['enter'])
+                    input()
     
-    # PRINT OUT GAME SELECT
+    # výpis menu
     if len(games) < 1:
         print(l['no_games'])
     else:

@@ -1,5 +1,6 @@
 available: 'Dostupné hry:'
 no_games: 'Žádné hry nenalezeny'
+enter: 'Stiskněte Enter pro pokračování'
 
 yaml_unspecified: 'Musíte specifikovat YAML soubor'
 game_by: 'Vytvořil $author'

@@ -5,10 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Start main",
+            "name": "Python: Start main (verbose)",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/__main__.py",
+            "args": ["-v"],
             "console": "integratedTerminal",
             "justMyCode": true,
         }

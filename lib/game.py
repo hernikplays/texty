@@ -35,7 +35,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
                     self.equippable.append(Item(item[name]["name"],item[name]["atk"]))
                 if("starter" in item[name].keys()): # Pokud je starter, přidáme hráčí na začátku do inventáře
                     if item[name]["starter"]:
-                        i = next((x for x in self.equippable if x.name == list(item.keys())[0]))
+                        i = next((x for x in self.equippable if x.name == item[name]["name"])) # V případě, že nenalezne předmět, vrací None
                         self.inventory.append(i)
                         self.equipped[i.type] = i
         if "enemies" in data["meta"].keys():
@@ -180,22 +180,26 @@ class Game: # Hlavní třída, uchovává údaje o hře
             MenuManager([self.lang["return"]],f"    {self.lang['inside_inv']}    \n")
         else:
             s = ""
-            op = [self.lang["return"]]
+            op = []
+            items = []
             for i,item in enumerate(self.inventory):
                 if type(item) is Item: # Pokud je předmět třídy Item, zobrazit zda-li je vybaven nebo ne
                     if self.equipped["weapon"] == item or self.equipped["armor"] == item:
                         op.append(f"- {item.name} | {self.lang['equipped']}")
                     else:
                         op.append(f"- {item.name}")
+                    items.append(item)    
                 else:
                     if(i == len(self.inventory)): # poslední, nepřidávat newline
                         s += f"- {item}"
                     else:
                         s += f"- {item}\n"
+                    items.append(None)    
+            op.append(self.lang["return"])       
             m = MenuManager(op,f"    {self.lang['inside_inv']}    \n{s}")
             if(m.selected != len(op)-1):
                 # Vybavit
-                i = op[m.selected]
+                i = items[m.selected]
                 self.equipped[i.type] = i
         self.print_text()
 
@@ -211,12 +215,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
         return newText
 
 def load(file_path,lang): # Načte hru z YAML souboru
-    try:
-        with open(file_path) as f:
-            data = yaml.load(f,Loader=SafeLoader)
-            g = Game(data,lang)
-            return g
-    except Exception as e:
-        print(f"{Back.RED}{Fore.WHITE}ERROR{Fore.RESET}{Back.RESET}")
-        print(e)
-        return None
+    with open(file_path) as f:
+        data = yaml.load(f,Loader=SafeLoader)
+        g = Game(data,lang)
+        return g

@@ -11,3 +11,6 @@ Ročníková práce
 
 ## Jak se s tím pracuje
 TODO
+
+## Pozor
+Kvůli limitacím a/nebo bezpečnostním opatřením systému je na **MacOS** a **Linuxu** nutné spouštět jako sudo!

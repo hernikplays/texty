@@ -6,8 +6,14 @@ meta: # make sure every key is in lowercase
     - iron_sword:
         atk: 3
         starter: true
+        name: "Iron Sword"
+    - wood_sword:
+        atk: 1
+        starter: true
+        name: "Wooden Sword"    
     - chainmail:
         def: 2
+        name: "Chainmail Armor"
         starter: true
   enemies:
     - john:

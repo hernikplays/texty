@@ -1,5 +1,6 @@
 available: 'Available games:'
 no_games: 'No games found'
+enter: 'Press Enter to continue'
 
 yaml_unspecified: 'You need to specify a path to a YAML file'
 game_by: 'A game by $author'
