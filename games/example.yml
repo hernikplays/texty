@@ -10,7 +10,7 @@ meta: # make sure every key is in lowercase
     - wood_sword:
         atk: 1
         starter: true
-        name: "Wooden Sword"    
+        name: "Wooden Sword"
     - chainmail:
         def: 2
         name: "Chainmail Armor"

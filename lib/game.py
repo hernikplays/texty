@@ -151,13 +151,12 @@ class Game: # Hlavní třída, uchovává údaje o hře
                     sleep(3)
                     self.current = self.nodes[self.current]["actions"][0] # Přesune na první akci
                     self.print_text()
-                    return
                 else:
                     # Hráč byl poražen TODO: Otestovat
                     print(self.lang["defeat"].replace("$enemy",enemy["name"]))
                     sleep(3)
                     self.print_text()
-                    return
+                return    
             else:
                 m = MenuManager(actions_desc,self.parse_colors(self.nodes[self.current]["text"]))
             sel = m.selected
