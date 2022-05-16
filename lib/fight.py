@@ -105,8 +105,15 @@ class FightHandler:
         enemyDef = self.enemyDef
         playerAtk = self.equipped["weapon"].attack
         playerDef = self.equipped["armor"].defense
-        self.hp -= playerAtk - enemyDef # zásah nepříteli
-        self.my -= enemyAtk - playerDef # zásah hráči
+
+        c = enemyAtk - playerDef
+        e = playerAtk - enemyDef
+        if c < 0:
+            c = 0
+        if e < 0:
+            e = 0
+        self.hp -= e # zásah nepříteli
+        self.my -= c # zásah hráči
         self.message = f"{self.lang['enemydmg'].replace('$atk',str(playerAtk - enemyDef)).replace('$name',self.name)}\n{self.lang['playerdmg'].replace('$atk',str(enemyAtk - playerDef)).replace('$name',self.attacks[p][name]['name'])}" # Změnit zprávu
 
     def defend(self):
