@@ -1,0 +1,88 @@
+meta: # Klíče musí být malým písmem
+  name: "Moje Textové Dobrodružství" # Název hry
+  id: "priklad" # Originální ID hry, používá se pro ukládání
+  creator: "hernik" # Vaše jméno
+  equippable: # Zde vložíte předměty, které si hráč může vybavit
+    - iron_sword:
+        atk: 3 # atk udává hodnotu poškození
+        starter: true # Hodnota starter udává, jestli hráč dostane věci na začátku hry
+        name: "Železný meč"
+    - wood_sword:
+        atk: 1 
+        starter: true
+        name: "Dřevěný meč"
+    - chainmail:
+        def: 2 # def udává hodnotu brnění
+        name: "Kroužková zbroj"
+        starter: true
+  enemies: # zde můžete vložit seznam nepřátel, které může hráč potkat
+    - john:
+      name: "Josef"
+      hp: 20
+      def: 1
+      attacks: # zde vložíte seznam útoků, je nutný alespoň jeden útok
+        - slash:
+            atk: 2
+            name: "Švih"
+        - boom:
+            atk: 1
+            name: "Bumprásk"
+
+game: # game obsahuje všechnu herní logiku a nody
+  start: # hra musí začínat vždy u "start" (malým písmem)
+      text: "&bDorazil jsi do malé krčmy uprostřed pustiny.\nUvnitř tě přivítá nepřátelský pohled zákazníků." # here is the text, which gets printed
+      actions: # zde přidáš akce, tj. klíče nodů, které může hráč vybrat
+        - wave
+        - sit
+  wave:
+      description: "Zamávat" # Tento text se zobrazí ve výběru
+      text: "&bZamáváš všem. &rVšichni tě ignorují."
+  sit: # V případě, že nejsou zadány žádné akce, hra končí
+      description: "Posadit se"
+      text: "Potichu usedneš a podíváš se na jídelní lístek."
+      actions:
+        - beer
+        - nothing
+  beer:
+      description: "Objednat pivo"
+      text: "Objednáš si jedno &epivo"
+      add_item: "Pivo" # přidá předmět do inventáře
+      actions:
+        - do_something
+  nothing:
+    description: "Nedělat nic"
+    text: "Rozhodl ses nic nedělat a tak jen sedíš..."
+    actions:
+      - drink
+      - leave
+  do_something:
+    description: "Pokračovat"
+    text: "Začínáš se nudit."
+    actions:
+      - drink
+      - leave
+  drink:
+    has_item: ["Pivo"] # názvy předmětů musí být doslovně, včetně malých a velkých písmen
+    description: "Napít se"
+    text: "Napil ses svého &ePiva"
+    actions:
+      - leave
+  leave:
+    description: "Odejít"
+    text: "Rozhodl ses odejít. Ale Josef ti zablokoval cestu!"
+    fight: john # klíč "fight" spouští souboj s postavou, kterou jsi definoval výše
+    actions:
+    - af
+  af:
+    description: "Pokračovat"
+    text: "&cJosef&r: Opravdu se omlouvám, nevím, co to do mě vjelo!"
+    actions:
+    - idc
+    - ok
+  idc:
+    description: "Mlčky odejít"
+    text: "Otočil ses na místě a beze slova odešel."
+  ok:
+    description: "Přijmout omluvu"
+    text: "&cJosef&r: Och, děkují, rozumný pane!"
+
