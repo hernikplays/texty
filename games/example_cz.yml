@@ -8,7 +8,7 @@ meta: # Klíče musí být malým písmem
         starter: true # Hodnota starter udává, jestli hráč dostane věci na začátku hry
         name: "Železný meč"
     - wood_sword:
-        atk: 1 
+        atk: 1
         starter: true
         name: "Dřevěný meč"
     - chainmail:
