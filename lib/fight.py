@@ -1,4 +1,5 @@
 import math
+from lib.item import Item
 
 from lib.menu import MenuManager
 
@@ -84,19 +85,28 @@ class FightHandler:
         if len(self.inventory) == 0:
             FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n")
         else:
+            op = []
+            items = []
             s = ""
             for i,item in enumerate(self.inventory):
-                if type(item) is not str:
-                    if(i == len(self.inventory)):
-                        s += f"- {item.name}"
+                if type(item) is Item: # Pokud je předmět třídy Item, zobrazit zda-li je vybaven nebo ne
+                    if self.equipped["weapon"] == item or self.equipped["armor"] == item:
+                        op.append(f"- {item.name} | {self.lang['equipped']}")
                     else:
-                        s += f"- {item.name}\n"
+                        op.append(f"- {item.name}")
+                    items.append(item)    
                 else:
-                    if(i == len(self.inventory)):
+                    if(i == len(self.inventory)): # poslední, nepřidávat newline
                         s += f"- {item}"
                     else:
                         s += f"- {item}\n"
-            FightMenu([self.lang["return"]],f"    {self.lang['inside_inv']}    \n{s}")
+                    items.append(None)    
+            op.append(self.lang["return"])       
+            m = FightMenu(op,f"    {self.lang['inside_inv']}    \n{s}")
+            if(m.selected != len(op)-1):
+                # Vybavit
+                i = items[m.selected]
+                self.equipped[i.type] = i
 
     def attack(self): # Provede útok vypočítáním ze statů útoku a obrany
         p = randrange(len(self.attacks))

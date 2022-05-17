@@ -38,6 +38,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
                         i = next((x for x in self.equippable if x.name == item[name]["name"])) # V případě, že nenalezne předmět, vrací None
                         self.inventory.append(i)
                         self.equipped[i.type] = i
+                        self.save.equipped[i.type]
         if "enemies" in data["meta"].keys():
             # Načte nepřátele
             for en in data["meta"]["enemies"]:
@@ -67,6 +68,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
             if(selection == 0):
                 self.current = self.save.currentPrompt
                 self.inventory = self.save.inventory
+                self.equipped = self.save.equipped
                 self.print_text()
             elif(selection == 1):
                 self.print_text()
@@ -145,6 +147,8 @@ class Game: # Hlavní třída, uchovává údaje o hře
                     input()
                 system("cls||clear")
                 keyboard.remove_all_hotkeys()
+                self.equipped = m.equipped
+                self.save.equipped = m.equipped
                 if m.hp < 1:
                     # Nepřítel byl poražen
                     print(self.lang["defeated"].replace("$enemy",enemy["name"]))
@@ -152,7 +156,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
                     self.current = self.nodes[self.current]["actions"][0] # Přesune na první akci
                     self.print_text()
                 else:
-                    # Hráč byl poražen TODO: Otestovat
+                    # Hráč byl poražen
                     print(self.lang["defeat"].replace("$enemy",enemy["name"]))
                     sleep(3)
                     self.print_text()
@@ -200,6 +204,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
                 # Vybavit
                 i = items[m.selected]
                 self.equipped[i.type] = i
+                self.save.equipped[i.type] = i
         self.print_text()
 
     def print_animated(self,animid): # Zobrazí animaci
