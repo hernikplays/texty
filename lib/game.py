@@ -169,6 +169,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
             elif (sel == len(actions_desc)-1): # Uložit a ukončit
                 self.save.currentPrompt = self.current 
                 self.save.inventory = self.inventory
+                self.save.equipped = self.equipped
                 self.save.save()
                 exit(0)
             else:
@@ -219,7 +220,7 @@ class Game: # Hlavní třída, uchovává údaje o hře
         return newText
 
 def load(file_path,lang): # Načte hru z YAML souboru
-    with open(file_path) as f:
+    with open(file_path, encoding="utf-8") as f:
         data = yaml.load(f,Loader=SafeLoader)
         g = Game(data,lang)
         return g

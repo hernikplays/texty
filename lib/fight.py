@@ -44,10 +44,10 @@ class FightHandler:
     def show(self):
         system("cls||clear")
         p = math.trunc(self.hp/self.max*10)
-        h = "🟥"*p
+        h = f"{Fore.RED}■{Fore.RESET}"*p
 
         j = math.trunc(self.my/30*10)
-        a = "🟩"*j
+        a = f"{Fore.GREEN}■{Fore.RESET}"*j
         if str(p).endswith(".5"):
             h += "◾"
         if str(a).endswith(".5"):
@@ -113,8 +113,12 @@ class FightHandler:
         name = list(self.attacks[p].keys())[0]
         enemyAtk = self.attacks[p][name]["atk"]
         enemyDef = self.enemyDef
-        playerAtk = self.equipped["weapon"].attack
-        playerDef = self.equipped["armor"].defense
+        playerAtk = 0
+        playerDef = 0
+        if self.equipped["weapon"] is not None:
+            playerAtk = self.equipped["weapon"].attack
+        if self.equipped["armor"] is not None:
+            playerDef = self.equipped["armor"].defense
 
         c = enemyAtk - playerDef
         e = playerAtk - enemyDef
@@ -131,6 +135,7 @@ class FightHandler:
 
 class FightMenu(MenuManager): # Upravené menu, které nemá input na konci, protože to jinak buguje
     def __init__(self,selections:list,additional:str):
+        keyboard.remove_all_hotkeys()
         self.selected = 0
         self.selections = selections
         self.additional = additional 
